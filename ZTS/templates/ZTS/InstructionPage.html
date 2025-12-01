@@ -1,0 +1,41 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Instructions
+{% endblock %}
+
+{% block content %}
+
+    <!--b>Todo</b>
+    <p>Add specific Experiment instructions here, this will only be shown before round 1!</p-->
+      
+    <b>Instructions</b>
+    <p>
+        The upcoming trading task will be conducted using a browser-based trading interface (see the image below for an illustration). 
+        The task consists of two rounds: one practice and one main round. Once you finished both rounds you will receive a fixed compensation that is independent
+        of your performance.
+        <!--Your combined performance in the two main rounds determines your compensation. -->
+        <br>
+        <br>
+        At the beginning of each round you will be endowed with an initial portfolio consisting of shares of a risky asset (Shares) and a safe asset (Cash), 
+        worth a combined 10 000 currency units. 50% of this endowment will be in the form of the risky asset (Shares), and 50% will consist of the safe asset (Cash). 
+        In each round, you can buy or sell Shares by clicking ”Buy” or “Sell” buttons of the corresponding size. Shares are characterized by higher volatility than Cash.
+        <br>
+        <br>
+        The prices are historical daily closing prices of a real-world market index.
+        Any trade that you make will be executed instantly at the current market price. You can buy or sell as many shares as you want, 
+        under the condition that you have sufficient funds for the transaction. No short-selling is possible. 
+        <br>
+        <br>
+        The y-axis of the price chart adjusts automatically to the 
+        current market price. These changes only reflect the current price, and are not informative for future price changes.
+    </p>
+
+    <img src="{% static "images/interface.png" %}" alt="Trading Interface" width=100%> 
+
+    <!--p><i>To change this page's content adjust the html of the /ZTS/InstructionPage.html file.</i></p-->
+
+    {% next_button %}
+
+{% endblock %}

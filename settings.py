@@ -1,0 +1,83 @@
+from os import environ
+
+# if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
+# in SESSION_CONFIGS, except those that explicitly override it.
+# the session config can be accessed from methods in your apps as self.session.config,
+# e.g. self.session.config['participation_fee']
+
+SESSION_CONFIG_DEFAULTS = dict(
+    session_name='test_session',
+    timeseries_filepath='_static/ZTS/timeseries_files/',
+    timeseries_filename='["demo_1.csv", "demo_2.csv"]',
+    refresh_rate_ms='[500, 500]',
+    initial_cash='[5000, 5000]',
+    initial_shares='[17, 17]',
+    trading_button_values='[[1, 10, 20], [1, 10, 20]]',
+    random_round_payoff=True,
+    training_round=True,
+    graph_buffer=0.05,
+    real_world_currency_per_point=1,
+    participation_fee=1.00,
+    num_rounds=2, 
+    doc='',
+)
+
+SESSION_CONFIGS = [
+    dict(
+        name='ZTS_pilot_control_V1',
+        display_name='ZTS Pilot Control',
+        num_demo_participants=1,
+        app_sequence=['PreSurvey', 'ZTS', 'PostSurvey'],
+        treatment='control',      # 👈 custom flag
+    ),
+    dict(
+        name='ZTS_pilot_FE_V1',
+        display_name='ZTS Pilot Treatment',
+        num_demo_participants=1,
+        app_sequence=['PreSurvey', 'ZTS', 'PostSurvey'],
+        treatment='FE',         # 👈 custom flag
+    ),
+]
+
+SESSION_FIELDS = ['num_rounds']
+PARTICIPANT_FIELDS = []
+
+# ISO-639 code
+# for example: de, fr, ja, ko, zh-hans
+LANGUAGE_CODE = 'en'
+
+# e.g. EUR, GBP, CNY, JPY
+REAL_WORLD_CURRENCY_CODE = 'USD'
+USE_POINTS = True
+
+ROOMS = [
+    dict(
+        name='zts_control',
+        display_name='ZTS – Control group (no news)',
+        participant_label_file='_rooms/zts_control.txt',
+    ),
+    dict(
+        name='zts_treatment',
+        display_name='ZTS – Treatment group (financial news)',
+        participant_label_file='_rooms/zts_treatment.txt',
+    ),
+    dict(
+        name='ZTS_test_room',
+        display_name='ZTS Test Room',
+        participant_label_file='_rooms/zts_test.txt',
+    ),
+    dict(name='live_demo', display_name='Room for live demo (no participant labels)'),
+]
+
+ADMIN_USERNAME = 'admin'
+# for security, best to set admin password in an environment variable
+ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
+
+DEMO_PAGE_INTRO_HTML = """
+<b>Zurich Trading Simulator (ZTS)</b>
+<p>A web-based behaviour experiment 
+in the form of a trading game, designed by the Chair of Cognitive Science - ETH Zurich.</p>
+"""
+
+# Change this default secret key to a fully random one after forking.
+SECRET_KEY = '1sjjosef4a7#)%cb3_us8%aa*l_d476lp&*hatrb6al*u*dude^'
