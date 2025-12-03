@@ -84,35 +84,67 @@ class Subsession(BaseSubsession):
 
     def get_timeseries_values(self):
         """
-        Read this round's timeseries file and return:
-        - asset name
-        - list of prices
-        - list of news strings (showing news only in the FE treatment)
+        Return (asset, prices, news) for the current round.
 
-        News text comes from the 3rd column ('news') of the CSV.
+        We keep the underlying price path identical across conditions by always loading
+        prices from the base file (e.g., AAPL.csv). News is condition-dependent:
+      - control  -> no news (blank strings)
+      - positive -> AAPL_pos.csv
+      - negative -> AAPL_neg.csv
+      - neutral  -> AAPL_neutral.csv  (optional, future)
+        Training round uses demo_1.csv as-is.
         """
-        filename = self.get_config_multivalue('timeseries_filename')
-        asset = filename.strip('.csv')
-        path = self.session.config['timeseries_filepath'] + filename
-        rows = read_csv(path, TimeSeriesFile)
+        base_filename = self.get_config_multivalue('timeseries_filename')  # e.g. demo_1.csv, AAPL.csv
+        base_path = self.session.config['timeseries_filepath'] + base_filename
 
-        # prices are always used
-        prices = [dic['price'] for dic in rows]
+        base_rows = read_csv(base_path, TimeSeriesFile)
+        prices = [dic['price'] for dic in base_rows]
 
-        # raw news from CSV (3rd column)
-        if 'news' in rows[0].keys():
-            news_raw = [dic['news'] if dic['news'] else '' for dic in rows]
-        else:
-            news_raw = [''] * len(prices)
+        # Asset name from the base file (strip .csv)
+        asset = base_filename.replace('.csv', '')
 
-        # treatment: FE sees news, control does not
-        treatment = self.session.config.get('treatment', 'control')
-        if treatment == 'FE':
-            news = news_raw
+        # Training round: just use whatever is in demo_1.csv (including its news column if any)
+        if base_filename.startswith('demo_'):
+            if base_rows and ('news' in base_rows[0].keys()):
+                news = [dic['news'] if dic['news'] else '' for dic in base_rows]
+            else:
+                news = [''] * len(prices)
+            return asset, prices, news
+
+        condition = self.session.config.get('news_condition', 'control')
+
+        # Control group: force blank news (even if base file contains something)
+        if condition == 'control':
+            return asset, prices, [''] * len(prices)
+
+        # Map condition -> suffix
+        suffix_map = {
+            'positive': '_pos',
+            'negative': '_neg',
+            'neutral': '_neutral',
+        }
+        suffix = suffix_map.get(condition)
+
+        # If condition is unknown, fail safe to no news
+        if not suffix:
+            return asset, prices, [''] * len(prices)
+
+        framed_filename = base_filename.replace('.csv', f'{suffix}.csv')
+        framed_path = self.session.config['timeseries_filepath'] + framed_filename
+
+        framed_rows = read_csv(framed_path, TimeSeriesFile)
+        if len(framed_rows) != len(base_rows):
+            raise ValueError(
+                f'Framed file {framed_filename} has different length than {base_filename}'
+            )
+
+        if framed_rows and ('news' in framed_rows[0].keys()):
+            news = [dic['news'] if dic['news'] else '' for dic in framed_rows]
         else:
             news = [''] * len(prices)
 
         return asset, prices, news
+
                 
 class Group(BaseGroup):
     pass

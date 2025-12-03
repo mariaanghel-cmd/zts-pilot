@@ -86,7 +86,7 @@
 
             <div class="container-fluid mt-4">
                 <!--<div  class="jumbotron" style=background-color:lightgrey>-->
-                {% if participant.vars.treatment == 'FE' %}
+                {% if session.config.news_condition != 'control' %}
                     <h2>News</h2>
                 {% endif %}
                 <p id="trade_news"></p>

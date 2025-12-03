@@ -1,0 +1,28 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+Final questions
+{% endblock %}
+
+{% block content %}
+
+  {% if condition != 'control' %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <p><strong>The news felt: very negative (1) ... very positive (7)</strong></p>
+        {% formfield player.news_valence %}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <p><strong>Feedback</strong></p>
+      {% formfield player.feedback_text %}
+    </div>
+  </div>
+
+  {% next_button %}
+
+{% endblock %}

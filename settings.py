@@ -8,34 +8,41 @@ from os import environ
 SESSION_CONFIG_DEFAULTS = dict(
     session_name='test_session',
     timeseries_filepath='_static/ZTS/timeseries_files/',
-    timeseries_filename='["demo_1.csv", "demo_2.csv"]',
-    refresh_rate_ms='[500, 500]',
-    initial_cash='[5000, 5000]',
-    initial_shares='[17, 17]',
-    trading_button_values='[[1, 10, 20], [1, 10, 20]]',
+    timeseries_filename='["demo_1.csv", "AAPL.csv", "AMZN.csv", "CAT.csv", "JNJ.csv", "JPM.csv", "KO.csv", "MSFT.csv", "NVDA.csv", "UNH.csv", "XOM.csv"]',
+    refresh_rate_ms='[800, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500]',
+    initial_cash='[5000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000]',
+    initial_shares='[10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]',
+    trading_button_values='[[1, 10, 20], [1, 10, 20], [1, 10, 20], [1, 10, 20], [1, 10, 20], [1, 10, 20], [1, 10, 20], [1, 10, 20], [1, 10, 20], [1, 10, 20], [1, 10, 20]]',
     random_round_payoff=True,
     training_round=True,
     graph_buffer=0.05,
     real_world_currency_per_point=1,
     participation_fee=1.00,
-    num_rounds=2, 
+    num_rounds=11, 
     doc='',
 )
 
 SESSION_CONFIGS = [
     dict(
-        name='ZTS_pilot_control_V1',
-        display_name='ZTS Pilot Control',
-        num_demo_participants=1,
+        name='ZTS_control_V1',
+        display_name='ZTS Control (No news)',
+        num_demo_participants=10,
         app_sequence=['PreSurvey', 'ZTS', 'PostSurvey'],
-        treatment='control',      # 👈 custom flag
+        news_condition='control',   
     ),
     dict(
-        name='ZTS_pilot_FE_V1',
-        display_name='ZTS Pilot Treatment',
-        num_demo_participants=1,
+        name='ZTS_pos_V1',
+        display_name='ZTS Positive news frame',
+        num_demo_participants=10,
         app_sequence=['PreSurvey', 'ZTS', 'PostSurvey'],
-        treatment='FE',         # 👈 custom flag
+        news_condition='positive',  
+    ),
+    dict(
+        name='ZTS_neg_V1',
+        display_name='ZTS Negative news frame',
+        num_demo_participants=10,
+        app_sequence=['PreSurvey', 'ZTS', 'PostSurvey'],
+        news_condition='negative',  
     ),
 ]
 
@@ -53,20 +60,19 @@ USE_POINTS = True
 ROOMS = [
     dict(
         name='zts_control',
-        display_name='ZTS – Control group (no news)',
+        display_name='ZTS – group C',
         participant_label_file='_rooms/zts_control.txt',
     ),
     dict(
-        name='zts_treatment',
-        display_name='ZTS – Treatment group (financial news)',
-        participant_label_file='_rooms/zts_treatment.txt',
+        name='zts_pos',
+        display_name='ZTS – group P',
+        participant_label_file='_rooms/zts_treatment_pos.txt',
     ),
     dict(
-        name='ZTS_test_room',
-        display_name='ZTS Test Room',
-        participant_label_file='_rooms/zts_test.txt',
+        name='zts_neg',
+        display_name='ZTS – group N',
+        participant_label_file='_rooms/zts_treatment_neg.txt',
     ),
-    dict(name='live_demo', display_name='Room for live demo (no participant labels)'),
 ]
 
 ADMIN_USERNAME = 'admin'
