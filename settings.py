@@ -59,17 +59,17 @@ USE_POINTS = True
 
 ROOMS = [
     dict(
-        name='zts_control',
+        name='zts_c',
         display_name='ZTS – group C',
         participant_label_file='_rooms/zts_control.txt',
     ),
     dict(
-        name='zts_pos',
+        name='zts_p',
         display_name='ZTS – group P',
         participant_label_file='_rooms/zts_treatment_pos.txt',
     ),
     dict(
-        name='zts_neg',
+        name='zts_n',
         display_name='ZTS – group N',
         participant_label_file='_rooms/zts_treatment_neg.txt',
     ),
